@@ -58,3 +58,24 @@
 			$scope.notes = data;       
 	  	});
 	  }]);
+
+	  dboardApp.directive('isActiveNav', [ '$location', function($location) {
+		return {
+		 restrict: 'A',
+		 link: function(scope, element) {
+			 console.log($location);
+		   scope.location = $location;
+		   scope.$watch('location.path()', function(currentPath) {
+			   console.log("curr " + currentPath);
+			   console.log("href" + element[0].attributes['href'].nodeValue);
+				if(angular.equals(currentPath,element[0].attributes['href'].nodeValue)){
+					console.log(element);
+			   element.addClass('active');
+			 } else {
+				console.log("false");				 
+			   element.removeClass('active');
+			 }
+		   });
+		 }
+		 };
+		}]);
