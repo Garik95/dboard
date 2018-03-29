@@ -1,5 +1,10 @@
 <div class="jumbotron text-center">
+		<h3>home</h3>	
 	<h1>{{ title }}</h1>
-	
+	<h2>{{ todos.length }}</h2>
 	<p>{{ message }}</p>
+</div>
+<div ng-repeat="todo in todos">
+	{{ todo.text }}
+	<hr>
 </div>

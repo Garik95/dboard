@@ -11,18 +11,18 @@ module.exports = function(app) {
 
 	// api ---------------------------------------------------------------------
 	// get all todos
-	// app.get('/api/todos', function(req, res) {
-	// 	// use mongoose to get all todos in the database
-	// 	Todo.find(function(err, todos) {
-	// 		console.log(todos);
+	app.get('/api/todos', function(req, res) {
+		// use mongoose to get all todos in the database
+		Todo.find(function(err, todos) {
+			// console.log(todos);
 
-	// 		// if there is an error retrieving, send the error. nothing after res.send(err) will execute
-	// 		if (err)
-	// 			res.send(err)
+			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			if (err)
+				res.send(err)
 
-	// 		res.json(todos); // return all todos in JSON format
-	// 	});
-	// });
+			res.json(todos); // return all todos in JSON format
+		});
+	});
 
 	// // create todo and send back all todos after creation
 	// app.post('/api/todos', function(req, res) {
@@ -71,19 +71,19 @@ module.exports = function(app) {
 	// });
 
 	// app.use(app.router);
-	app.get('/about',function(req,res){
-		res.render("pages/about.html");
-	});
-	app.get('/:pages/:name',function(req,res){
-		var file = req.params[0];
-		console.log(req.params);
-		// res.send("123");
-		// res.render("pages/" + req.params.name);
-		res.render("pages/home.html");
+	// app.get('/about',function(req,res){
+	// 	// res.json(123);
+	// 	res.render("pages/about.html");
+	// });
+	// app.post('/about',function(req,res){
+	// 	res.json(123);
+	// });
+
+	app.get('/pages/:name',function(req,res){
+		res.render("pages/" + req.params.name);
 	});
 	// application -------------------------------------------------------------
-	app.all('/*', function(req, res) {
-		// res.sendFile(__dirname + '/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+	app.get('*', function(req, res) {
 		res.sendFile('index.html', { root: __dirname });
 	});
 };
