@@ -1,10 +1,17 @@
-<div class="jumbotron text-center">
-		<h3>home</h3>	
+<div class="row">
+		<div class="col-sm-3">
+		  <div class="card">
+			<div class="card-body">
+			  <h5 class="card-title">Users</h5>
+			  <h1 class="card-text">{{ users_cnt }}</h1>
+			  <a href="#" class="btn btn-primary">Users list</a>
+			</div>
+		  </div>
+		</div>
+	  </div>
+<hr>
+<div class="jumbotron text-center">	
 	<h1>{{ title }}</h1>
 	<h2>{{ todos.length }}</h2>
 	<p>{{ message }}</p>
-</div>
-<div ng-repeat="todo in todos">
-	{{ todo.text }}
-	<hr>
 </div>

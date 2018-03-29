@@ -1,5 +1,6 @@
 var Todo = require('./models/todo');
-var mongoose = require('mongoose');
+var BotList = require('./models/bot_user_list');
+var mongoose = require('mongoose').set('debug', true);
 
 var Schema = mongoose.Schema,
 ObjectId = Schema.ObjectId;
@@ -21,6 +22,14 @@ module.exports = function(app) {
 				res.send(err)
 
 			res.json(todos); // return all todos in JSON format
+		});
+	});
+
+	app.get('/list',function(req,res){
+		BotList.count(function(err,cnt){
+			if(err) console.log(err);
+
+			res.json({"cnt":cnt});
 		});
 	});
 

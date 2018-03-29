@@ -7,6 +7,9 @@
     <title>Dashboard</title>
     <link href="scripts/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="custom/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="scripts/please-wait/build/please-wait.css">
+    <link rel="stylesheet" href="custom/loader.css">
+    <link rel="stylesheet" href="custom/wave.css">
     <script src="scripts/angular/angular.js"></script>
     <script src="scripts/angular-route/angular-route.js"></script>
     <base href="/" >
@@ -107,7 +110,18 @@
   
           <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <!-- Main content -->
-            <div ng-view></div>
+            <div class="inner" ng-view></div>
+            <script type="text/javascript" src="scripts/please-wait/build/please-wait.min.js"></script>
+    <script type="text/javascript">
+    function pWait() {
+      var loading_screen = pleaseWait({
+        logo: "http://www.pngall.com/wp-content/uploads/2016/06/Superman-Logo-Free-Download-PNG.png",
+        // backgroundColor: '#f46d3b',
+        loadingHtml: '<div class="spinner"></div>'
+      });
+      return loading_screen;
+    }
+    </script>
           </main>
         </div>
       </div>

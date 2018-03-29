@@ -28,13 +28,20 @@
 	}]);
 
 	// create the controller and inject Angular's $scope
-	dboardApp.controller('mainController', function($scope) {
+	dboardApp.controller('mainController', function($scope,$http) {
 		// create a message to display in our view
+		var ld = pWait();
 		$scope.title = "Dashboard";
 		$scope.message = 'Everyone come and see how good I look!';
+		$http.get('/list').then(function(res) {
+			$scope.users_cnt = res.data.cnt;
+			// console.log(res.data.cnt);       
+		  });
+		ld.finish();
 	});
 
 	dboardApp.controller('aboutController', function($scope,$http) {
+		var ld = pWait();
 		$scope.title = "Notes list";		
 		$scope.message = 'Look! I am an about page.';
 		$scope.cars = "123123";
@@ -42,7 +49,8 @@
 			$scope.todos = res.data;       
 			// console.log($scope);
 		  });
-		console.log($scope);
+		ld.finish();
+// console.log($scope);
 	});
 
 	dboardApp.controller('contactController', function($scope) {
