@@ -27,15 +27,12 @@
 			$locationProvider.html5Mode(true);
 	}]);
 
-	// create the controller and inject Angular's $scope
 	dboardApp.controller('mainController', function($scope,$http) {
-		// create a message to display in our view
 		var ld = pWait();
 		$scope.title = "Dashboard";
 		$scope.message = 'Everyone come and see how good I look!';
 		$http.get('/list').then(function(res) {
-			$scope.users_cnt = res.data.cnt;
-			// console.log(res.data.cnt);       
+			$scope.users_cnt = res.data.cnt;      
 		  });
 		ld.finish();
 	});
@@ -47,10 +44,8 @@
 		$scope.cars = "123123";
 		$http.get('/api/todos').then(function(res) {
 			$scope.todos = res.data;       
-			// console.log($scope);
 		  });
 		ld.finish();
-// console.log($scope);
 	});
 
 	dboardApp.controller('contactController', function($scope) {

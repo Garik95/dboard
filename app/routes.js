@@ -32,62 +32,6 @@ module.exports = function(app) {
 			res.json({"cnt":cnt});
 		});
 	});
-
-	// // create todo and send back all todos after creation
-	// app.post('/api/todos', function(req, res) {
-	// 	// console.log(req.body.text);
-	// 	// create a todo, information comes from AJAX request from Angular
-	// 	Todo.create({
-	// 		text : req.body.text,
-	// 		done : false
-	// 	}, function(err, todo) {
-	// 		console.log(todo);
-	// 		if (err)
-	// 			res.send(err);
-	// 	// var data 	= mongoose.model('Todo',todo);
-	// 	// var n 		= new data();
-	// 	// n.text		= req.body.text;
-	// 	// // n.done		= false;
-	// 	// console.log(n);
-	// 	// n.save();
-	// 	// n.save(function(err){console.log(err);});
-	// 	// res.send("Saved!");
-	// 		// get and return all the todos after you create another
-	// 		Todo.find(function(err, todos) {
-	// 			if (err)
-	// 				res.send(err)
-	// 			res.json(todos);
-	// 		});
-	// 	});
-
-	// });
-
-	// // delete a todo
-	// app.delete('/api/todos/:todo_id', function(req, res) {
-	// 	Todo.remove({
-	// 		_id : req.params.todo_id
-	// 	}, function(err, todo) {
-	// 		if (err)
-	// 			res.send(err);
-
-	// 		// get and return all the todos after you create another
-	// 		Todo.find(function(err, todos) {
-	// 			if (err)
-	// 				res.send(err)
-	// 			res.json(todos);
-	// 		});
-	// 	});
-	// });
-
-	// app.use(app.router);
-	// app.get('/about',function(req,res){
-	// 	// res.json(123);
-	// 	res.render("pages/about.html");
-	// });
-	// app.post('/about',function(req,res){
-	// 	res.json(123);
-	// });
-
 	app.get('/pages/:name',function(req,res){
 		res.render("pages/" + req.params.name);
 	});
