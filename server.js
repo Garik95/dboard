@@ -3,14 +3,18 @@ var express  = require('express');
 var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose'); 					// mongoose for mongodb
 var port  	 = process.env.PORT || 8080; 				// set the port
-var database = require('./config/database'); 			// load the database config
+// var database = require('./config/database'); 			// load the database config
+// var database = require('./config/database'),  // external network file
+//     schemaFile = require('./app/models/schemas.js'),
+//     mongooseMulti = require('mongoose-multi'),
+//     db = mongooseMulti.start(database.db, schemaFile);
 
 var morgan = require('morgan'); 		// log requests to the console (express4)
 var bodyParser = require('body-parser'); 	// pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
 // configuration ===============================================================
-mongoose.connect(database.url,function(err){console.log(err)}); 	// connect to mongoDB database on modulus.io
+// mongoose.connect(database.url,function(err){console.log(err)}); 	// connect to mongoDB database on modulus.io
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html'); // set up ejs for templating
@@ -29,4 +33,9 @@ require('./app/routes.js')(app);
 
 // listen (start app with node server.js) ======================================
 app.listen(port);
+
+// db.api.bot_user_lists.find().exec(function(err,docs){
+//     console.log(docs);
+// });
+
 console.log("App listening on port " + port);

@@ -1,7 +1,11 @@
 var Todo = require('./models/todo');
 var BotList = require('./models/bot_user_list');
+var Schemas = require('./models/schemas');
 var mongoose = require('mongoose').set('debug', true);
-
+var database = require('../config/database'),  // external network file
+    schemaFile = require('./models/schemas.js'),
+    mongooseMulti = require('mongoose-multi'),
+    db = mongooseMulti.start(database.db, schemaFile);
 var Schema = mongoose.Schema,
 ObjectId = Schema.ObjectId;
 var todo = new Schema({
@@ -11,27 +15,14 @@ var todo = new Schema({
 module.exports = function(app) {
 
 	// api ---------------------------------------------------------------------
-	// get all todos
-	app.get('/api/todos', function(req, res) {
-		// use mongoose to get all todos in the database
-		Todo.find(function(err, todos) {
-			// console.log(todos);
 
-			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
-			if (err)
-				res.send(err)
-
-			res.json(todos); // return all todos in JSON format
-		});
-	});
-
-	app.get('/list',function(req,res){
-		BotList.count(function(err,cnt){
+	app.get('/list', function(req,res){
+		db.api.bot_user_lists.find().exec(function(err,result){
 			if(err) console.log(err);
-
-			res.json({"cnt":cnt});
+			res.json({"cnt":result.length});
 		});
 	});
+
 	app.get('/pages/:name',function(req,res){
 		res.render("pages/" + req.params.name);
 	});
