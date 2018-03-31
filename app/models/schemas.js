@@ -30,5 +30,18 @@ module.exports = {
             reply: String,
             addAPIState :Boolean
         }
+    },
+    dashboard:{
+        users:{
+            local: {
+                email        : String,
+                password     : String,
+                emailHash    : String,
+                createdAt    : String,
+                status	     : Boolean,
+                first_name   : String,
+                last_name    : String
+            }
+        }
     }
 };
