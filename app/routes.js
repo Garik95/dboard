@@ -72,6 +72,23 @@ module.exports = function(app) {
 	app.post('/login',function(req,res){
 		if(req.body.btn == "Submit")
 		{
+			if(req.body.email && req.body.password)
+			{
+				var email	= req.body.email;
+				var pass	= req.body.password;
+				db.dashboard.userses.find({"local.email":email}).exec(function(err,user){
+					if(err) res.send(err);
+					if(!user){
+						res.render(__dirname + '/login.ejs',{message:"User not found!",status:"Y"});
+					}
+					else if(user){
+						res.json(user);
+						// bcrypt.compare(password, user.password, function (err, result) {
+
+						// });
+					}
+				});
+			}
 			res.json(req.body);
 		}
 		else if(req.body.btn == "Sign Up")
