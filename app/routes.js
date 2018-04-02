@@ -28,68 +28,87 @@ module.exports = function(app) {
 	// api ---------------------------------------------------------------------
 
 	app.get('/list', function(req,res){
-		db.api.bot_user_lists.find().exec(function(err,result){
-			if(err) console.log(err);
-			res.json({"cnt":result.length});
-		});
+		if(req.session.userId)
+		{
+			db.api.bot_user_lists.find().exec(function(err,result){
+				if(err) console.log(err);
+				res.json({"cnt":result.length,"session":req.session.userId});
+			});
+		}
+		else res.status(404);
 	});
 
 	app.get('/pages/:name',function(req,res){
-		res.render("pages/" + req.params.name);
+		if(req.session.userId)
+		{
+			res.render("pages/" + req.params.name);
+		}
+		else res.redirect("/");
 	});
 
 	app.get('/confirmEmail',function(req, res){
 		var token = req.param('token');
 		var email = req.param('email');
-		db.dashboard.userses.findOne({'local.email':email,'local.emailHash':token,'local.status':false}, function(err, user) {
-		if(!user) {res.render(__dirname + '/login.ejs',{message:"Something went wrong!",status:"R"})}
-		else
-		{
-			var c = parseFloat(user.local.createdAt);
-			if((unix.now() - c) <= 24*60*40) { 
-				db.dashboard.userses.update({"local.email" : email},{$set:{"local.status":true}}).exec(function(err,user){
-					if(err) console.log(err);
-					if(user)
-					{
-						db.dashboard.userses.update({"local.email" : email},{$set:{"local.emailHash":""}}).exec(function(err,user){});
-						
-						res.render(__dirname + '/login.ejs',{message:"Your account has been confirmed!",status:"G"});
-					}
-				});
-			}
-			else {
-				db.dashboard.userses.remove({"local.email" : email},function(err,user){
-					if(err) console.log(err);
-					if(user){
-						res.render(__dirname + '/login.ejs',{message:"Your sign up request was expired! Please try to sign up again...",status:"Y"})
-					}
-				});
-			}
-		}
-		});
+		if(token && email) {
+			db.dashboard.userses.findOne({'local.email':email,'local.emailHash':token,'local.status':false}, function(err, user) {
+			if(!user) {res.render(__dirname + '/login.ejs',{message:"Something went wrong!",status:"R"})}
+			else
+			{
+				var c = parseFloat(user.local.createdAt);
+				if((unix.now() - c) <= 24*60*40) { 
+					db.dashboard.userses.update({"local.email" : email},{$set:{"local.status":true}}).exec(function(err,user){
+						if(err) console.log(err);
+						if(user)
+						{
+							db.dashboard.userses.update({"local.email" : email},{$set:{"local.emailHash":""}}).exec(function(err,user){});
+							
+							res.render(__dirname + '/login.ejs',{message:"Your account has been confirmed!",status:"G"});
+						}
+					});
+				}
+				else {
+					db.dashboard.userses.remove({"local.email" : email},function(err,user){
+						if(err) console.log(err);
+						if(user){
+							res.render(__dirname + '/login.ejs',{message:"Your sign up request was expired! Please try to sign up again...",status:"Y"})
+						}
+					});
+				}
+			}			
+			});
+		}else res.send(404);
 	});
 
 	app.post('/login',function(req,res){
-		if(req.body.btn == "Submit")
+		if(req.body.btn == "Sign In")
 		{
-			if(req.body.email && req.body.password)
+			if(req.body.email && req.body.pass)
 			{
 				var email	= req.body.email;
-				var pass	= req.body.password;
+				var pass	= req.body.pass;
 				db.dashboard.userses.find({"local.email":email}).exec(function(err,user){
 					if(err) res.send(err);
-					if(!user){
+					console.log(user.length);
+					if(user.length == 0){
 						res.render(__dirname + '/login.ejs',{message:"User not found!",status:"Y"});
 					}
-					else if(user){
-						res.json(user);
-						// bcrypt.compare(password, user.password, function (err, result) {
-
-						// });
+					else if(user.length > 0){
+						// console.log(user[0].local.password);
+						bcrypt.compare(pass, user[0].local.password, function (err, result) {
+							if(err) res.send(err);
+							if(result)
+							{
+								req.session.userId = user[0]._id;
+								// res.send(req.session.userId);
+								res.redirect("/auth");
+							}else if(!result)
+							{
+								res.render(__dirname + '/login.ejs',{message:"Invalid password",status:"R"});
+							}
+						});
 					}
 				});
 			}
-			res.json(req.body);
 		}
 		else if(req.body.btn == "Sign Up")
 		{
@@ -148,11 +167,39 @@ module.exports = function(app) {
 			}
 			else res.send("Data validation error!");
 		}
+		else res.send(404); 
 	});
 
+	app.get('/logout',function(req,res){
+		req.session.destroy(function(err) {
+			res.redirect("/");
+		});
+	});
+
+	app.get('/auth',function(req,res){
+		if(req.session.userId){
+				res.sendFile('index.html', { root: __dirname });
+		}else {
+			res.redirect("/");
+		}
+	})
+
 	// application -------------------------------------------------------------
-	app.get('*', function(req, res) {
-		if(req.url == "/") res.render(__dirname + "/login.ejs",{message:""});
-		res.sendFile('index.html', { root: __dirname });
+	app.get('/', function(req, res) {
+				if(req.session.userId){
+					res.redirect('/auth');
+				}
+				else
+				{
+					res.render(__dirname + "/login.ejs",{message:"",status:"G"});
+				}
+				res.sendFile('index.html', { root: __dirname });
+
+	});
+
+	// HTTP statuses -----------------------------------------------------------
+
+	app.use(function (req, res, next) {
+		res.status(404).render(__dirname + "/404.ejs");
 	});
 };

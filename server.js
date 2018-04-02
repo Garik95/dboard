@@ -3,11 +3,7 @@ var express  = require('express');
 var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose'); 					// mongoose for mongodb
 var port  	 = process.env.PORT || 8080; 				// set the port
-// var database = require('./config/database'); 			// load the database config
-// var database = require('./config/database'),  // external network file
-//     schemaFile = require('./app/models/schemas.js'),
-//     mongooseMulti = require('mongoose-multi'),
-//     db = mongooseMulti.start(database.db, schemaFile);
+var session = require('express-session');
 
 var morgan = require('morgan'); 		// log requests to the console (express4)
 var bodyParser = require('body-parser'); 	// pull information from HTML POST (express4)
@@ -18,6 +14,15 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html'); // set up ejs for templating
+
+app.use(session({
+    secret: '233F88D911E59C81DE2BC77284FBF',
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}));
 
 app.use('/custom', express.static(__dirname + '/custom')); 				// set the static files location /public/img will be /img for users
 app.use('/scripts', express.static(__dirname + '/node_modules')); 				// set the static files location /public/img will be /img for users
