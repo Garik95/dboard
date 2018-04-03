@@ -2,6 +2,7 @@ var md5 	= require('md5');
 var nodemailer  = require('nodemailer');
 var unix       = require('unix-timestamp');
 var bcrypt = require('bcrypt-nodejs');
+var sha256 = require("js-sha256");
 
 var Todo = require('./models/todo');
 var BotList = require('./models/bot_user_list');
@@ -182,7 +183,29 @@ module.exports = function(app) {
 		}else {
 			res.redirect("/");
 		}
-	})
+	});
+
+	app.get('/tg',function(req,res){
+		var auth = checkSignature(req.query);
+		res.json(auth);
+		// var req_query = req.query;
+		// var data_hash = req_query['hash'];
+		// delete req_query["hash"];
+		// var data = [];
+		// for (var param in req_query)
+		// {
+		// 	data.push(param + "=" + req_query[param]);
+		// 	console.log(param,req_query[param]);
+		// }
+		// data.sort();
+		// var data_check_str = data.join("\n");
+		// var secret_key = sha256('460201887:AAE4NKqNyZwh6gNXm_lhjW1cinPC_VojNCA');
+		// console.log(secret_key);
+		// res.json(data_check_str);
+
+		// var auth_token = SHA256('460201887:AAE4NKqNyZwh6gNXm_lhjW1cinPC_VojNCA');
+		// res.json(req.param('id'));
+	});
 
 	// application -------------------------------------------------------------
 	app.get('/', function(req, res) {
@@ -203,3 +226,36 @@ module.exports = function(app) {
 		res.status(404).render(__dirname + "/404.ejs");
 	});
 };
+
+const { createHash, createHmac } = require('crypto');
+const TOKEN = "460201887:AAE4NKqNyZwh6gNXm_lhjW1cinPC_VojNCA";
+
+// I prefer get the secret's hash once but check the gist linked
+// on line 1 if you prefer passing the bot token as a param
+const secret = createHash('sha256')
+  .update(TOKEN)
+  .digest()
+
+function checkSignature ({ hash, ...data }) {
+  const checkString = Object.keys(data)
+    .sort()
+    .map(k => (`${k}=${data[k]}`))
+    .join('\n');
+  const hmac = createHmac('sha256', secret)
+    .update(checkString)
+	.digest('hex');
+	console.log(hmac,hash);
+  return hmac === hash;
+}
+
+// // Sample usage
+// const payload = {
+//   id: '424242424242',
+//   first_name: 'John',
+//   last_name: 'Doe',
+//   username: 'username',
+//   photo_url: 'https://t.me/i/userpic/320/username.jpg',
+//   auth_date: '1519400000',
+//   hash: '87e5a7e644d0ee362334d92bc8ecc981ca11ffc11eca809505'
+// }
+// checkSignature(payload);
