@@ -31,9 +31,9 @@ module.exports = function(app) {
 	app.get('/list', function(req,res){
 		if(req.session.userId)
 		{
-			db.api.bot_user_lists.find().exec(function(err,result){
+			db.api.bot_user_lists.aggregate([{$group : {_id : "$user_id", count : {$sum : 1}}}]).exec(function(err,result){
 				if(err) console.log(err);
-				res.json({"cnt":result.length,"session":req.session.userId});
+				res.json(result);
 			});
 		}
 		else res.status(404).render(__dirname + "/404.ejs");
