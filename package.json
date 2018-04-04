@@ -1,0 +1,46 @@
+{
+  "name": "dboard-1.0",
+  "version": "1.0.0",
+  "description": "API dashboard",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Garik95/dboard.git"
+  },
+  "author": "Garik Nurmurodoff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Garik95/dboard/issues"
+  },
+  "homepage": "https://github.com/Garik95/dboard#readme",
+  "dependencies": {
+    "angular": "^1.6.9",
+    "angular-route": "^1.6.9",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "~1.5.2",
+    "bootstrap": "^4.0.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "crypto": "^1.0.1",
+    "ejs": "^2.5.8",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "feather-icons": "^4.7.0",
+    "jquery": "^1.9.1",
+    "js-sha256": "^0.9.0",
+    "md5": "^2.2.1",
+    "method-override": "~2.1.2",
+    "mongoose": "^5.0.8",
+    "mongoose-multi": "^0.3.1",
+    "morgan": "~1.2.2",
+    "nodemailer": "^4.6.3",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "please-wait": "0.0.5",
+    "popper.js": "^1.12.9",
+    "unix-timestamp": "^0.2.0"
+  }
+}
