@@ -36,7 +36,7 @@ module.exports = function(app) {
 				res.json({"cnt":result.length,"session":req.session.userId});
 			});
 		}
-		else res.status(404);
+		else res.status(404).render(__dirname + "/404.ejs");
 	});
 
 	app.get('/pages/:name',function(req,res){
@@ -44,7 +44,7 @@ module.exports = function(app) {
 		{
 			res.render("pages/" + req.params.name);
 		}
-		else res.redirect("/");
+		else res.status(404).render(__dirname + "/404.ejs");
 	});
 
 	app.get('/confirmEmail',function(req, res){
@@ -77,7 +77,7 @@ module.exports = function(app) {
 				}
 			}			
 			});
-		}else res.send(404);
+		}else res.status(404).render(__dirname + "/404.ejs");
 	});
 
 	app.post('/login',function(req,res){
@@ -168,7 +168,7 @@ module.exports = function(app) {
 			}
 			else res.send("Data validation error!");
 		}
-		else res.send(404); 
+		else res.status(404).render(__dirname + "/404.ejs");
 	});
 
 	app.get('/logout',function(req,res){
@@ -181,30 +181,13 @@ module.exports = function(app) {
 		if(req.session.userId){
 				res.sendFile('index.html', { root: __dirname });
 		}else {
-			res.redirect("/");
+			res.status(404).render(__dirname + "/404.ejs");
 		}
 	});
 
 	app.get('/tg',function(req,res){
 		var auth = checkSignature(req.query);
 		res.json(auth);
-		// var req_query = req.query;
-		// var data_hash = req_query['hash'];
-		// delete req_query["hash"];
-		// var data = [];
-		// for (var param in req_query)
-		// {
-		// 	data.push(param + "=" + req_query[param]);
-		// 	console.log(param,req_query[param]);
-		// }
-		// data.sort();
-		// var data_check_str = data.join("\n");
-		// var secret_key = sha256('460201887:AAE4NKqNyZwh6gNXm_lhjW1cinPC_VojNCA');
-		// console.log(secret_key);
-		// res.json(data_check_str);
-
-		// var auth_token = SHA256('460201887:AAE4NKqNyZwh6gNXm_lhjW1cinPC_VojNCA');
-		// res.json(req.param('id'));
 	});
 
 	// application -------------------------------------------------------------
