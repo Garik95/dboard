@@ -24,7 +24,7 @@ var transporter = nodemailer.createTransport({
 	}
 });
 
-module.exports = function(app) {
+module.exports = function(app,db1) {
 
 	// api ---------------------------------------------------------------------
 
@@ -192,6 +192,11 @@ module.exports = function(app) {
 
 	// application -------------------------------------------------------------
 	app.get('/', function(req, res) {
+		// console.log(db1.db("project_api"));
+		db1.db("project_api").collection("users").find({}).toArray(function(err,result){
+			if(err) console.log(err);
+			console.log(result);
+		});
 				if(req.session.userId){
 					res.redirect('/auth');
 				}

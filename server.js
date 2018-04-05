@@ -9,6 +9,9 @@ var morgan = require('morgan'); 		// log requests to the console (express4)
 var bodyParser = require('body-parser'); 	// pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
+var MongoClient = require('mongodb').MongoClient;
+var db;
+
 // configuration ===============================================================
 // mongoose.connect(database.url,function(err){console.log(err)}); 	// connect to mongoDB database on modulus.io
 
@@ -34,13 +37,28 @@ app.use(bodyParser.json()); 									// parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
 // routes ======================================================================
-require('./app/routes.js')(app);
+// require('./app/routes.js')(app,db);
 
 // listen (start app with node server.js) ======================================
-app.listen(port);
+
 
 // db.api.bot_user_lists.find().exec(function(err,docs){
 //     console.log(docs);
 // });
 
+MongoClient.connect("mongodb://api_user:123456@ds157528.mlab.com:57528/project_api", function(err, database1) {
+  if(err) throw err;
+  else{
+    MongoClient.connect("mongodb://dash_user:123456@ds261078.mlab.com:61078/project_dashboard", function(err, database2) {
+        if(err) throw err;
+        
+        db1 = database1;
+        app.listen(port);
+        console.log(db1);
+      require('./app/routes.js')(app,db1);
+    });
+  }
+  
+
+});
 console.log("App listening on port " + port);
