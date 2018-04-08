@@ -54,8 +54,8 @@ MongoClient.connect("mongodb://api_user:123456@ds157528.mlab.com:57528/project_a
         
         db1 = database1;
         app.listen(port);
-        console.log(db1);
-      require('./app/routes.js')(app,db1);
+        // console.log(db1);
+      require('./app/routes.js')(app,database1,database2);
     });
   }
   

@@ -24,11 +24,15 @@ var transporter = nodemailer.createTransport({
 	}
 });
 
-module.exports = function(app,db1) {
+module.exports = function(app,db1,db2) {
 
 	// api ---------------------------------------------------------------------
 
 	app.get('/list', function(req,res){
+		db1.db("project_api").collection("users").find({}).toArray(function(err,result){
+			if(err) console.log(err);
+			console.log(result);
+		});
 		if(req.session.userId)
 		{
 			db.api.bot_user_lists.aggregate([{$group : {_id : "$user_id", count : {$sum : 1}}}]).exec(function(err,result){
@@ -87,9 +91,11 @@ module.exports = function(app,db1) {
 			{
 				var email	= req.body.email;
 				var pass	= req.body.pass;
-				db.dashboard.userses.find({"local.email":email}).exec(function(err,user){
+
+				db2.db("project_dashboard").collection("users").find({"local.email":email}).toArray(function(err,user){
+				// db.dashboard.userses.find({"local.email":email}).exec(function(err,user){
 					if(err) res.send(err);
-					console.log(user.length);
+					// console.log(db2);
 					if(user.length == 0){
 						res.render(__dirname + '/login.ejs',{message:"User not found!",status:"Y"});
 					}
@@ -100,7 +106,6 @@ module.exports = function(app,db1) {
 							if(result)
 							{
 								req.session.userId = user[0]._id;
-								// res.send(req.session.userId);
 								res.redirect("/auth");
 							}else if(!result)
 							{
@@ -192,11 +197,6 @@ module.exports = function(app,db1) {
 
 	// application -------------------------------------------------------------
 	app.get('/', function(req, res) {
-		// console.log(db1.db("project_api"));
-		db1.db("project_api").collection("users").find({}).toArray(function(err,result){
-			if(err) console.log(err);
-			console.log(result);
-		});
 				if(req.session.userId){
 					res.redirect('/auth');
 				}
