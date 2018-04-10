@@ -92,7 +92,7 @@ module.exports = function(app,db1,db2) {
 				var email	= req.body.email;
 				var pass	= req.body.pass;
 
-				db2.db("project_dashboard").collection("users").find({"local.email":email}).toArray(function(err,user){
+				db2.db("dboard").collection("users").find({"local.email":email}).toArray(function(err,user){
 				// db.dashboard.userses.find({"local.email":email}).exec(function(err,user){
 					if(err) res.send(err);
 					// console.log(db2);

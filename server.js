@@ -11,6 +11,14 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 var MongoClient = require('mongodb').MongoClient;
 var db;
+var local_url = {
+  "dboard":"mongodb://192.168.79.128:27017/dboard",
+  "api"   :"mongodb://192.168.79.128:27017/api"
+};
+var remote_url = {
+  "dboard":"mongodb://dash_user:123456@ds261078.mlab.com:61078/project_dashboard",
+  "api"   :"mongodb://api_user:123456@ds157528.mlab.com:57528/project_api"
+};
 
 // configuration ===============================================================
 // mongoose.connect(database.url,function(err){console.log(err)}); 	// connect to mongoDB database on modulus.io
@@ -46,10 +54,12 @@ app.use(methodOverride());
 //     console.log(docs);
 // });
 
-MongoClient.connect("mongodb://api_user:123456@ds157528.mlab.com:57528/project_api", function(err, database1) {
+MongoClient.connect(local_url.api, function(err, database1) {
+  console.log("1");
   if(err) throw err;
   else{
-    MongoClient.connect("mongodb://dash_user:123456@ds261078.mlab.com:61078/project_dashboard", function(err, database2) {
+    MongoClient.connect(local_url.dboard, function(err, database2) {
+      console.log("2");      
         if(err) throw err;
         
         db1 = database1;
